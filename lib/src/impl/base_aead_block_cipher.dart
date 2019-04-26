@@ -71,8 +71,10 @@ abstract class BaseAEADBlockCipher extends AEADBlockCipher {
     if (_lastMacSizeBytesOff!=macSize) {
       throw new InvalidCipherTextException("Input data too short");
     }
-    if (!_compareLists(mac, _lastMacSizeBytes)) {
-      throw new InvalidCipherTextException("Authentication tag check failed");
+    if (_initialAssociatedText != null) {
+      if (!_compareLists(mac, _lastMacSizeBytes)) {
+        throw new InvalidCipherTextException("Authentication tag check failed");
+      }
     }
   }
 
@@ -232,7 +234,9 @@ abstract class BaseAEADBlockCipher extends AEADBlockCipher {
     if (_lastKey==null) return;
 
     prepare(new KeyParameter(_lastKey));
-    processAADBytes(_initialAssociatedText, 0, _initialAssociatedText.length);
+    if (_initialAssociatedText != null) {
+      processAADBytes(_initialAssociatedText, 0, _initialAssociatedText.length);
+    }
   }
 
   int _getOutputSize(int length) => (length+ (forEncryption ? macSize : -macSize)+blockSize-1)~/blockSize*blockSize;

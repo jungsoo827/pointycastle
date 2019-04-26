@@ -173,7 +173,11 @@ class GCMBlockCipher extends BaseAEADBlockCipher {
 
     var result = remainingInput.length>0 ? processBlock(remainingInput, 0, out, outOff) : 0;
 
-    var len = new Uint8List.view((new Uint64List(2)..[1] = aad.length*8..[0] = _processedBytes*8).buffer);
+    int aadLength = 0;
+    if (aad !=null){
+      aadLength = aad.length;
+    }
+    var len = new Uint8List.view((new Uint64List(2)..[1] = aadLength*8..[0] = _processedBytes*8).buffer);
     len = new Uint8List.fromList(len.reversed.toList());
 
     _gHASHBlock(_x, len);
