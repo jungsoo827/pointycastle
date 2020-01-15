@@ -2,7 +2,7 @@
 // This library is dually licensed under LGPL 3 and MPL 2.0.
 // See file LICENSE for more information.
 
-library pointycastle.test.modes.cbc_test;
+library pointycastle.test.modes.cbc_hmac_test;
 
 import "dart:typed_data";
 
