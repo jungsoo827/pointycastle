@@ -30,18 +30,28 @@ void _twosComplement(Uint8List result) {
   result[0] = result[0] | 0x80;
 }
 
-BigInt decodeBigInt(Uint8List bytes) {
-  var isNegative = (bytes[0] & 0x80) != 0;
-  var result = BigInt.zero;
-  for (int i = 0; i < bytes.length; ++i) {
-    result = result << 8;
-    var x = isNegative ? (bytes[i] ^ 0xff) : bytes[i];
-    result += BigInt.from(x);
+/// Decode a BigInt from bytes in big-endian encoding.
+BigInt decodeBigInt(List<int> bytes) {
+  BigInt result = new BigInt.from(0);
+  for (int i = 0; i < bytes.length; i++) {
+    result += new BigInt.from(bytes[bytes.length - i - 1]) << (8 * i);
   }
-  if (isNegative) return (result + BigInt.one) * _minusOne;
-
   return result;
 }
+
+//
+//BigInt decodeBigInt(Uint8List bytes) {
+//  var isNegative = (bytes[0] & 0x80) != 0;
+//  var result = BigInt.zero;
+//  for (int i = 0; i < bytes.length; ++i) {
+//    result = result << 8;
+//    var x = isNegative ? (bytes[i] ^ 0xff) : bytes[i];
+//    result += BigInt.from(x);
+//  }
+//  if (isNegative) return (result + BigInt.one) * _minusOne;
+//
+//  return result;
+//}
 
 Uint8List encodeBigInt(BigInt number) {
   var orig = number;
